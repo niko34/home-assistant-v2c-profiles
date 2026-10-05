@@ -1,0 +1,12 @@
+{
+  "domain": "v2c_profiles",
+  "name": "V2C Profiles",
+  "codeowners": ["@niko34"],
+  "config_flow": true,
+  "documentation": "https://github.com/niko34/home-assistant-v2c-profiles",
+  "issue_tracker": "https://github.com/niko34/home-assistant-v2c-profiles/issues",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "requirements": [],
+  "version": "1.0.0"
+}

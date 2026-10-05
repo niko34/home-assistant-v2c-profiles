@@ -1,0 +1,42 @@
+{
+  "title": "V2C Profiles",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect V2C Profiles",
+        "description": "Home Assistant stores your V2C login in its protected config entry and uses it only to create or repair the OAuth token chain. This step never selects a profile.",
+        "data": {
+          "device_id": "Charging station ID",
+          "api_key": "V2C API key",
+          "email": "V2C email",
+          "password": "V2C password"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Reconnect V2C Profiles",
+        "description": "Enter replacement credentials for charging station {device_id}.",
+        "data": {
+          "api_key": "V2C API key",
+          "email": "V2C email",
+          "password": "V2C password"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Unable to connect to V2C Cloud.",
+      "invalid_auth": "V2C rejected the device or credentials.",
+      "unknown": "Unexpected V2C Cloud response."
+    },
+    "abort": {
+      "already_configured": "This charging station is already configured.",
+      "reauth_successful": "V2C credentials were updated."
+    }
+  },
+  "entity": {
+    "select": {
+      "charge_profile": {
+        "name": "Charging profile"
+      }
+    }
+  }
+}
