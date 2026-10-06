@@ -7,6 +7,7 @@
   "issue_tracker": "https://github.com/niko34/home-assistant-v2c-profiles/issues",
   "integration_type": "service",
   "iot_class": "cloud_polling",
+  "after_dependencies": ["recorder"],
   "requirements": [],
-  "version": "1.0.0"
+  "version": "1.0.1"
 }

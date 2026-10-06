@@ -34,12 +34,20 @@ sent to the charger until connectivity is restored.
 
 - Home Assistant fetches the profile list and active profile during integration
   setup or reload.
-- It then polls V2C Cloud every 60 seconds. A profile changed outside Home
-  Assistant is therefore normally reflected within one minute, plus network
+- It then polls V2C Cloud every 5 minutes. A profile changed outside Home
+  Assistant is therefore normally reflected within five minutes, plus network
   latency, provided V2C Cloud is reachable.
 - A profile selected in Home Assistant is sent to V2C Cloud immediately. After
   V2C accepts the change, the integration performs an immediate refresh instead
-  of waiting for the next 60-second poll.
+  of waiting for the next five-minute poll.
+- If V2C Cloud returns HTTP 429, the integration honors the server's
+  `Retry-After` delay when provided and otherwise applies an increasing backoff
+  of up to one hour.
+- During a temporary Cloud or rate-limit error, Home Assistant retains the last
+  successfully synchronized profile list and active profile instead of clearing
+  the selector.
+- The last successful profile snapshot is stored with the config entry, so it
+  also survives Home Assistant and integration restarts.
 
 ## Safety
 

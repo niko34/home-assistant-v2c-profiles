@@ -5,6 +5,8 @@ from __future__ import annotations
 import asyncio
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
+from datetime import datetime, timezone
+from email.utils import parsedate_to_datetime
 import time
 from typing import Any
 from urllib.parse import quote
@@ -36,6 +38,14 @@ class V2CAuthError(V2CError):
 
 class V2CConnectionError(V2CError):
     """Raised when V2C Cloud cannot be reached."""
+
+
+class V2CRateLimitError(V2CError):
+    """Raised when V2C Cloud temporarily rate-limits requests."""
+
+    def __init__(self, retry_after_seconds: int | None = None) -> None:
+        super().__init__("V2C Cloud rate limit reached")
+        self.retry_after_seconds = retry_after_seconds
 
 
 @dataclass(frozen=True, slots=True)
@@ -283,7 +293,33 @@ class V2CProfilesClient:
         await response.read()
         if response.status in (400, 401, 403):
             raise V2CAuthError(f"V2C rejected the request ({response.status})")
+        if response.status == 429:
+            raise V2CRateLimitError(
+                V2CProfilesClient._retry_after_seconds(
+                    response.headers.get("Retry-After")
+                )
+            )
         raise V2CError(f"V2C request failed ({response.status})")
+
+    @staticmethod
+    def _retry_after_seconds(value: str | None) -> int | None:
+        """Parse an HTTP Retry-After header expressed as seconds or a date."""
+        if not value:
+            return None
+        try:
+            return max(1, int(value))
+        except ValueError:
+            pass
+        try:
+            retry_at = parsedate_to_datetime(value)
+            if retry_at.tzinfo is None:
+                retry_at = retry_at.replace(tzinfo=timezone.utc)
+            return max(
+                1,
+                int((retry_at - datetime.now(timezone.utc)).total_seconds()),
+            )
+        except (TypeError, ValueError, OverflowError):
+            return None
 
     @staticmethod
     def _profile_records(payload: Any) -> list[Any]:

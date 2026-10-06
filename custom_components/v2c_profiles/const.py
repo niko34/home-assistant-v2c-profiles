@@ -11,9 +11,12 @@ CONF_DEVICE_ID: Final = "device_id"
 CONF_EMAIL: Final = "email"
 CONF_PASSWORD: Final = "password"
 CONF_REFRESH_TOKEN: Final = "refresh_token"
+CONF_CACHED_PROFILES: Final = "cached_profiles"
+CONF_CACHED_ACTIVE_PROFILE: Final = "cached_active_profile"
 
 DEFAULT_DEVICE_ID: Final = "QQAE61"
-DEFAULT_SCAN_INTERVAL_SECONDS: Final = 60
+DEFAULT_SCAN_INTERVAL_SECONDS: Final = 300
+MAX_RATE_LIMIT_BACKOFF_SECONDS: Final = 3600
 
 OAUTH_TOKEN_URL: Final = "https://v2c.cloud/v2cauth/oauth/token"
 FIREBASE_SIGN_IN_URL: Final = (
