@@ -11,7 +11,6 @@ charging profiles from V2C Cloud.
 
 - Creates a `select` entity containing the profiles returned by V2C Cloud.
 - Tracks the currently active charging profile.
-- Refreshes profile data every 60 seconds.
 - Uses V2C's rotating OAuth refresh tokens.
 - Persists each rotated refresh token immediately in the Home Assistant config
   entry.
@@ -19,6 +18,28 @@ charging profiles from V2C Cloud.
   login.
 - Supports credential replacement through Home Assistant's reauthentication
   flow.
+
+## V2C Cloud dependency
+
+This integration depends entirely on V2C Cloud. Profile discovery, active
+profile synchronization, authentication, and profile selection all use remote
+V2C Cloud services. There is currently no local charger API fallback.
+
+An internet connection, an available V2C Cloud service, and valid V2C account
+credentials are therefore required. If V2C Cloud is unavailable, Home Assistant
+cannot refresh the profile list or active profile, and profile changes cannot be
+sent to the charger until connectivity is restored.
+
+## Synchronization
+
+- Home Assistant fetches the profile list and active profile during integration
+  setup or reload.
+- It then polls V2C Cloud every 60 seconds. A profile changed outside Home
+  Assistant is therefore normally reflected within one minute, plus network
+  latency, provided V2C Cloud is reachable.
+- A profile selected in Home Assistant is sent to V2C Cloud immediately. After
+  V2C accepts the change, the integration performs an immediate refresh instead
+  of waiting for the next 60-second poll.
 
 ## Safety
 
