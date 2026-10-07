@@ -93,6 +93,30 @@ The integration validates access without changing the active profile. The
 first OAuth refresh token is then stored alongside the login so the integration
 can recover automatically if token rotation is interrupted.
 
+## Changing the charging profile in Home Assistant
+
+After setup, the integration creates a **Charging profile** `select` entity for
+the V2C charging station. Open the entity from **Settings → Devices & services →
+V2C Profiles**, or add it to a dashboard, to view and change the active profile
+directly from Home Assistant.
+
+The available choices are read dynamically from V2C Cloud. Selecting an option
+in Home Assistant activates that profile on V2C Cloud immediately; the entity is
+then refreshed to show the profile confirmed by V2C. Changes made in the V2C app
+or website are also synchronized back to Home Assistant during the next poll.
+
+The entity can also be used in scripts and automations with the standard
+`select.select_option` action. Use the entity ID assigned by your Home Assistant
+instance and a profile name returned by the entity, for example:
+
+```yaml
+action: select.select_option
+target:
+  entity_id: select.charging_profile
+data:
+  option: "Max tout de suite"
+```
+
 ## Disclaimer
 
 The V2C Cloud endpoints used by this project are not documented as a public,
